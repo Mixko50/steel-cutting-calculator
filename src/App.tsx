@@ -115,7 +115,7 @@ function App() {
       return acc + item.quantity;
     }, 0);
   }
-  
+
   return (
     <ChakraProvider theme={theme}>
       <Box display={"flex"} flexDirection={"column"}>
@@ -133,6 +133,8 @@ function App() {
             </Box>
             <Box width={"100%"}>
               <NumberInput
+                defaultValue={0}
+                value={target}
                 color={"black"}
                 variant={"primary"}
                 onChange={(value) => setTarget(parseInt(value))}
@@ -151,18 +153,30 @@ function App() {
                 onChange={(e) => setSizeOfSteels(e.target.value)}
                 bgColor={"white"}
                 color={"black"}
+                value={sizeOfSteels}
               />
             </Box>
           </Box>
         </Box>
 
-        <Box display={"flex"} justifyContent={"center"}>
+        <Box display={"flex"} justifyContent={"center"} gap={3}>
           <Button
             colorScheme='teal'
             size='lg'
             onClick={() => calculateSteel(convertToArray(sizeOfSteels ?? ''), target ?? 0)}
           >
             Calculate
+          </Button>
+          <Button
+            colorScheme='red'
+            size='lg'
+            onClick={() => {
+              setSizeOfSteels('');
+              setTarget(0);
+              setResult([]);
+            }}
+          >
+            Clear
           </Button>
         </Box>
 
@@ -172,7 +186,15 @@ function App() {
           </Text>
         </Box>
 
-        {result.map((item, index) => (
+        <Box display={"flex"} justifyContent={"center"} alignItems={"center"} mb={5}>
+          <Box display={"flex"} alignItems={"center"}>
+            <Text fontSize={'xl'} fontWeight={""}>All Steel Rods must be purchased:</Text>
+            <Text fontSize={'2xl'} fontWeight={"bold"} ml={2}>{result.filter(i => i.total > 0).length}</Text>
+            <Text fontSize={'xl'} fontWeight={""} m={2}>sets</Text>
+          </Box>
+        </Box>
+
+        {result.filter(i => i.total > 0).map((item, index) => (
           <Box display={"flex"} justifyContent={"center"} alignItems={"center"} flexDirection={"column"} m={1} color={"black"}>
             <Box bgColor={"white"} p={7} borderRadius={20}>
               <Box display={"flex"} alignItems={"start"} justifyContent={"center"}>
@@ -199,12 +221,6 @@ function App() {
             </Box>
           </Box>
         ))}
-        {/*<Box display={"flex"} justifyContent={"center"} alignItems={"center"} mb={5}>*/}
-        {/*  <Box display={"flex"} alignItems={"center"}>*/}
-        {/*    <Text fontSize={'xl'} fontWeight={""}>All Steel Rods must be purchased:</Text>*/}
-        {/*    <Text fontSize={'2xl'} fontWeight={"bold"} ml={2}>6</Text>*/}
-        {/*  </Box>*/}
-        {/*</Box>*/}
       </Box>
     </ChakraProvider>
   )
